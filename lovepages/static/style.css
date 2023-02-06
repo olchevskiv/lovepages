@@ -1,0 +1,203 @@
+
+:root {
+
+    --black: #000000;
+    --gray-100: #f5f8fa;
+    --gray-200: #eff2f5;
+    --gray-300: #E4E6EF;
+    --gray-400: #B5B5C3;
+    --gray-500: #A1A5B7;
+    --gray-600: #7E8299;
+    --gray-700: #5E6278;
+    --gray-800: #3F4254;
+    --gray-900: #181C32;
+
+    --white: #ffffff;
+
+    --primary: #fe89e4;
+    --secondary: #29193f;
+    --tertiary: #a63446;
+    --dark: #36311F;
+    --light:  #FBFEF9;
+    --muted:  #c3c3c3;
+
+    --bg: #29193f;
+}
+
+.text-muted {
+    color: var( --muted) !important;
+}
+
+.text-light {
+    color: var( --light) !important;
+}
+
+body {
+    background-color:var(--bg);
+    color: var(--white);
+    font-family: sans-serif;
+    text-rendering: optimizeSpeed;
+    -webkit-font-smoothing: antialiased;
+}
+
+footer {
+    font-size:  0.6rem;
+    color: var( --muted);
+    letter-spacing: 0.05em;
+    position: fixed;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    z-index: 1030;
+}
+
+nav {
+    background-color:transparent;
+    color: var(--white);
+    padding-top: 20px !important;
+    padding-left: 28px !important;
+}
+
+.logo {
+    z-index: 1;
+    font-size: 1.45rem;
+    color: white;
+    font-family: sans-serif;
+    margin-right: 20px;
+    letter-spacing: 0.05em;
+    border-radius: 15px;
+    padding-top: 6px;
+    padding-left: 18px;
+    padding-right: 18px;
+    padding-bottom: 6px;
+    border: 2px solid white;
+}
+
+.logo:hover {
+    text-decoration: none;
+    color: var(--primary);
+    border: 2px solid var(--primary);
+}
+
+.nav-item {
+    font-size: 16px;
+    color: var(--light);
+    letter-spacing: 0.05em;
+    border-radius: 15px;
+    border: 2px solid white;
+    margin-right: 14px;
+}
+
+.nav-item:hover {
+    color: var(--primary);
+    border: 2px solid var(--primary);
+}
+.form-group {
+    margin-bottom:20px !important;
+}
+
+.form-control {
+    background-color: transparent !important;
+    color: var(--light) !important;
+    width: 100%;
+    font-weight: 400 !important;
+    font-size: 0.85rem;
+}
+
+.form-control::placeholder {
+    color: var(--muted) !important;
+}
+
+.form-control:focus {
+   box-shadow: none;
+   color: var(--primary) !important;
+   border-color: var(--primary) !important;
+   font-weight: 400 !important;
+}
+.form-control:focus::placeholder {
+    color: var(--primary) !important;
+}
+
+.btn-primary {
+    color: var(--light) !important;
+    background-color: transparent;
+    border-color: var(--light) !important;
+    border-radius: 6px;
+}
+.btn-primary:hover {
+    color: var(--primary) !important;
+    background-color: transparent;
+    border-color: var(--primary) !important;
+}
+
+.card {
+    background-color: transparent !important;
+    border: 1px solid var(--light) !important;
+    box-shadow: none;
+    margin-bottom: 20px;
+}
+
+.card-body{
+    font-size: 0.85rem;
+}
+
+.border-dashed {
+    border-style:dashed !important;
+}
+
+.card-header {
+    font-size: 1rem;
+}
+.card-text {
+    font-size: 0.85rem;
+}
+
+.card:hover {
+    color: var(--primary) !important;
+    border-color: var(--primary) !important;
+}
+
+a.card {
+    text-decoration: none;
+    color: var(--light);
+}
+a.card:hover {
+    text-decoration: none;
+    color: var(--primary);
+}
+
+
+option {
+    background-color: var(--secondary) !important;
+    color: var(--light) !important;
+    padding-top: 10px !important;
+}
+
+.dropzone {
+    color: var(--light);
+    font-size: 0.85rem;
+    background-color: transparent;
+    border: 1px solid var(--light);
+    border-radius: 6px;
+}
+
+.dropzone .dz-preview.dz-image-preview {
+    background: transparent;
+}
+
+.widget{
+    position:fixed;
+}
+
+.widget.draggable {
+    cursor: pointer;
+    user-select: none;
+    position:fixed;
+}
+
+.widget.draggable:hover{
+    outline: 2px solid var(--light);
+}
+.widget.draggable.drag{
+    outline: 2px solid var(--light);
+}

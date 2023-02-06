@@ -1,0 +1,186 @@
+{% extends "base.html" %} 
+{% block title %}Home{% endblock %} 
+{% block content %}
+<div class="row">
+  <div class="col-8 col-sm-6 mt-5 mb-3">
+    <h2 >add widget</h2>
+  </div>
+  <div class="col-4 col-sm-6 mt-5 mb-3" align="right">
+    <a href="/" class="btn btn-primary">back</a>
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-xl-12">
+    <form method="POST" class="w-100">
+      <div class="form-group">
+        <label for="type" class="sr-only">Type</label>
+        <select class="form-control" id="type" name="type">
+            <option selected>choose a widget type</option>
+            <option value="image">image</option>
+            <option value="text">text</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label for="width" class="sr-only">Width</label>
+        <input type="number" class="form-control" id="width" name="width" placeholder="enter width of widget" />
+      </div>
+
+      <div class="form-group d-none" data-form-type="text">
+        <label for="text" class="sr-only">Text</label>
+        <input type="text" class="form-control" maxlength="255" id="text" name="text" placeholder="enter text" />
+      </div>
+
+      <div class="form-group d-none" data-form-type="text">
+        <label for="font_size" class="sr-only">Font Size</label>
+        <input type="number" class="form-control" id="font_size" name="font_size" step="1" min="1" max="100" placeholder="enter font size (px)" />
+      </div>
+
+      <div class="form-group d-none" data-form-type="text">
+        <label for="font_family" class="sr-only">Font</label>
+        <select class="form-control" id="font_family" name="font_family">
+            <option selected>choose a font</option>
+            <option value="serif" style="font-family:serif">serif</option>
+            <option value="sans-serif" style="font-family:sans-serif">sans-serif</option>
+            <option value="monospace" style="font-family:monospace">monospace</option>
+            <option value="cursive" style="font-family:cursive">cursive</option>
+            <option value="fantasy" style="font-family:fantasy">fantasy</option>
+        </select>
+      </div>
+
+      <div class="form-group d-none" data-form-type="text">
+        <label for="font_color" class="sr-only">Font Color</label>
+        <input type="color" class="form-control" id="font_color" value="#fbfef9">
+      </div>
+
+      <div class="form-group d-none" data-form-type="image">
+          <label for="link" class="sr-only">Image Link</label>
+          <input type="url" class="form-control" pattern="https://.*" id="link" name="link" placeholder="enter a link to an image" />
+      </div>
+
+
+      <div id="widget_preview" class="d-none mt-5">
+        <div>preview</div>
+        <div id="widget">
+            <img src="" id="image_preview" class="w-100">
+            <div id="text_preview"></div>
+        </div>
+      </div>
+    
+      <div align="right">
+        <button type="submit" class="btn btn-primary">add!</button>
+      </div>
+    </form>
+  </div>
+</div>
+{% endblock %}
+{% block scripts %}
+<script>
+
+    let widget_preview = document.getElementById("widget_preview");
+    let widget = document.getElementById("widget");
+
+    let type = document.getElementById("type");
+    let width = document.getElementById("width");
+
+    let text = document.getElementById("text");
+    let font_family = document.getElementById("font_family");
+    let font_size = document.getElementById("font_size");
+    let font_color = document.getElementById("font_color");
+    let img = document.getElementById("link");
+
+    type.addEventListener("change", function(){
+      imageForm = document.querySelectorAll('[data-form-type="image"]');
+      textForm = document.querySelectorAll('[data-form-type="text"]');
+      if (type.value == 'image') {
+          imageForm.forEach(function(e){
+            e.classList.remove('d-none');
+          });
+          textForm.forEach(function(e){
+            e.classList.add('d-none');
+          });
+      } else if (type.value == 'text') {
+        imageForm.forEach(function(e){
+          e.classList.add('d-none');
+        });
+        textForm.forEach(function(e){
+          e.classList.remove('d-none');
+        });
+      } else {
+        imageForm.forEach(function(e){
+          e.classList.add('d-none');
+        });
+        textForm.forEach(function(e){
+          e.classList.add('d-none');
+        });
+      }
+      widget_preview.classList.add("d-none");
+      document.getElementById("text_preview").innerHTMl = '';
+      document.getElementById("image_preview").setAttribute("src", '');
+    });
+
+  width.addEventListener("change", function(){
+    if (width.value != '') {
+        widget.style.width = width.value + 'px';
+    }
+  });
+  font_family.addEventListener("change", function(){
+      if (font_family.value != '') {
+        widget.style.fontFamily = font_family.value;
+      }
+  });
+  font_size.addEventListener("change", function(){
+    if (font_size.value != '') {
+      widget.style.fontSize = font_size.value + 'px';
+    }
+  });
+
+  font_color.addEventListener("change", function(){
+    if (font_color.value != '') {
+      widget.style.color = font_color.value;
+    }
+  });
+
+    img.addEventListener("change", function(){
+        if (img.value != '') {
+            let img_preview = document.getElementById("image_preview");
+            widget_preview.classList.remove("d-none");
+
+            if (width.value != '') {
+              widget.style.width = width.value + 'px';
+            }
+         
+            img_preview.setAttribute("src", img.value);
+        }
+    });
+
+    text.addEventListener("change", function(){
+
+      if (text.value != '') {
+        let text_preview = document.getElementById("text_preview");
+        widget_preview.classList.remove("d-none");
+
+        if (width.value != '') {
+          widget.style.width = width.value + 'px';
+        }
+     
+        text_preview.innerHTML = text.value;
+        widget.style.color = 'white';
+
+        if (font_family.value != ''){
+          widget.style.fontFamily = font_family.value;
+        }
+
+        if (font_size.value != ''){
+          widget.style.fontSize = font_size.value + 'px';
+        }
+
+        if (font_color.value != '') {
+          widget.style.color = font_color.value;
+        }
+
+      }
+    });
+</script>
+{% endblock %}

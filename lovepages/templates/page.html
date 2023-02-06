@@ -1,0 +1,29 @@
+{% extends "base.html" %} 
+{% block title %}Home{% endblock %} 
+{% block content %}
+<div class="row mt-5 mb-3">
+  <div class="col-8 col-sm-6">
+   <h3>{{ page.title }}</h3>
+  </div>
+  <div class="col-4 col-sm-6" align="right">
+    <a href="/page/{{page.id}}/edit_page"   class="btn btn-primary mr-1 mb-1">edit</a>
+    <a href="/page/{{page.id}}/add_widget" class="btn btn-primary mb-1">+</a>
+  </div>
+</div>
+
+<div class="widget-container">
+
+  {% for widget in page.widgets %}
+  <div id="{{widget.id}}" data-widget-type="{{widget.type}}" class="widget" style="width:{{widget.width}}px;z-index:{{widget.index}};top:{{widget.posy}};left:{{widget.posx}}" >
+    {% if widget.type == 'image' %}
+    <img src="{{widget.content}}" class="w-100">
+    {% endif %}
+    {% if widget.type == 'text' %}
+    <div style="font-family:{{widget.font_family}};font-size:{{widget.font_size}}px;color:{{widget.font_color}}">{{widget.content}}</div>
+    {% endif %}
+  </div>
+  {% endfor %}
+
+</div>
+
+{% endblock %}

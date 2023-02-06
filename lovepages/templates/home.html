@@ -1,0 +1,26 @@
+{% extends "base.html" %} 
+{% block title %}Home{% endblock %} 
+{% block content %}
+<div class="row">
+  <div class="col-8 col-sm-6 mt-5 mb-3">
+    <h2 >♡ my pages ♡</h2>
+  </div>
+  <div class="col-4 col-sm-6 mt-5 mb-3" align="right">
+    <a href="/new_page" class="btn btn-primary">+ new page</a>
+  </div>
+</div>
+
+<div class="row">
+  {% for page in user.pages %}
+  <div class="col-md-6 col-xl-3">
+    <a href="/page/{{ page.id }}" class="card text-muted">
+      <div class="card-body">
+        <div class="card-title">{{ page.title }}</div>
+        <div class="card-text">{{ page.sub_title }}</div>
+      </div>
+    </a>
+  </div>
+  {% endfor %}
+</div>
+
+{% endblock %}
