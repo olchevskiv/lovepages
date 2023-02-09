@@ -1,18 +1,9 @@
 {% extends "base.html" %} 
-{% block title %}Home{% endblock %} 
 {% block content %}
 <div class="row">
   <div class="col-8 col-sm-6  mt-5 mb-3">
-    <form method="POST" class="w-100 d-flex">
-      <div class="form-group mr-2 mt-0">
-        <label for="title" class="sr-only">title</label>
-        <input type="text" class="form-control form-control-lg" id="title" name="title" value="{{ page.title }}"/>
-      </div>
-      <div class="form-group mt-0">
-        <label for="sub_title" class="sr-only">sub title</label>
-        <input type="text" class="form-control form-control-lg" id="sub_title" name="sub_title" value="{{ page.sub_title }}"/>
-      </div>
-      </form>
+    <h3 id="title" contenteditable="true">{{ page.title }}</h3>
+    <h6 id="sub_title" contenteditable="true">{{ page.sub_title }}</h6>
   </div>
   <div class="col-4 col-sm-6 mt-5 mb-3" align="right">
     <a href="/page/{{page.id}}" class="btn btn-primary mr-1">cancel</a>
@@ -20,8 +11,37 @@
     <a href="/page/{{page.id}}/add_widget" class="btn btn-primary">+</a>
   </div>
 </div>
+<style type="text/css">
+    .context-menu {
+        position: absolute;
+        text-align: center;
+        background: lightgray;
+        border: 1px solid black;
+    }
 
-<div class="widget-container">
+    .context-menu ul {
+        padding: 0px;
+        margin: 0px;
+        min-width: 150px;
+        list-style: none;
+    }
+
+    .context-menu ul li {
+        padding-bottom: 7px;
+        padding-top: 7px;
+        border: 1px solid black;
+    }
+
+    .context-menu ul li a {
+        text-decoration: none;
+        color: black;
+    }
+
+    .context-menu ul li:hover {
+        background: darkgray;
+    }
+</style>
+<div id="widget-container" style="width:100%;height:100%">
   {% for widget in page.widgets %}
   <div id="{{widget.id}}" data-widget-type="{{widget.type}}" class="widget draggable" style="width:{{widget.width}}px;z-index:{{widget.index}};top:{{widget.posy}};left:{{widget.posx}}" >
     {% if widget.type == 'image' %}
@@ -33,21 +53,24 @@
   </div>
   {% endfor %}
 </div>
-
+<div id="contextMenu" class="context-menu d-none">
+    <ul>
+        <li><a href="#">Delete</a></li>
+    </ul>
+</div>
 {% endblock %}
 {% block scripts %}
 <script>
   let page_id = '{{page.id|safe}}';
   let widgets = JSON.parse('{{widgets|safe}}');
-  console.log(widgets.find(widget => widget.id == 1).posx)
 
   const saveButton = document.getElementById('savePageEdits');
   saveButton.addEventListener('click', function(e) {
-      fetch(site_url + 'page/{{page.id}}/edit_page', {
+      fetch(site_url + 'page/{{page.id}}/edit', {
           method: 'post',
           body: JSON.stringify({
-            'title':document.getElementById('title').value.trim(),
-            'sub_title':document.getElementById('sub_title').value.trim(),
+            'title':document.getElementById('title').innerHTML,
+            'sub_title':document.getElementById('sub_title').innerHTML,
             'widgets': widgets
           }),
           headers: {
@@ -55,51 +78,121 @@
               'Content-Type': 'application/json'
           }
       }).then((response) => {
-          return response.json()
-      }).then((res) => {
-          if (res.status === 201) {
-              console.log("Post successfully created!")
-          }
+          console.log(response);
       }).catch((error) => {
           console.log(error)
-      })
+      });
   });
 
 
-  const container = document.querySelector('.widget-container');
+  const container = document.querySelector('body');
+  const containerWidth = parseInt(window.getComputedStyle(container).width);
+  const containerHeight = parseInt(window.getComputedStyle(container).height);
+
   window.onload = function() {
     document.querySelectorAll('.widget').forEach((widget) => {
       draggable(widget);
     });
   }
+
   
   function draggable(el) {
     el.addEventListener('mousedown', function(e) {
       el.classList.add('drag');
       el.style.position = 'absolute';
       el.style.zIndex = "1";
-      var offsetX = e.clientX - parseInt(window.getComputedStyle(this).left);
-      var offsetY = e.clientY - parseInt(window.getComputedStyle(this).top);
-      
+      let offsetX = e.clientX - parseInt(window.getComputedStyle(this).left);
+      let offsetY = e.clientY - parseInt(window.getComputedStyle(this).top);
+      let elWidth = parseInt(el.style.width);
+      let menu = document.getElementById("contextMenu");
+
       function mouseMoveHandler(e) {
-        el.style.top = (e.clientY - offsetY) + 'px';
-        el.style.left = (e.clientX - offsetX) + 'px';
+        let newTop = (e.clientY - offsetY);
+        let newLeft = (e.clientX - offsetX);
+
+        if (newLeft < 0) {
+            newLeft = 0;
+        } else if ( (newLeft + parseInt(el.style.width)) > (containerWidth)) {
+            newLeft = (containerWidth - parseInt(el.style.width));
+          // el.style.left = newLeft + 'px';
+            console.log('newLeft:' + newLeft + '   newLeft + elWidth:' +  (newLeft + parseInt(el.style.width)) + ' containerWidth:' + containerWidth);
+        } else {
+            el.style.left = newLeft + 'px';
+        }
+        
+        if (newTop < 0) {
+            newTop = 0;
+        } else if (newTop + parseInt(el.style.height) > containerHeight ) {
+            newLeft = (containerHeight - parseInt(el.style.height));
+        } else {
+            el.style.top = newTop + 'px';
+        }
+  
+      }
+
+      function scroll(e){
+         if (checkScrollDirection(e)) {
+            elWidth += 10;
+            elWidth > 1000 ? 1000 : elWidth;
+          } else {
+            elWidth -= 10;
+            elWidth < 0 ? 0 : elWidth;
+          }
+          el.style.width = elWidth + 'px';
+      }
+
+      function checkScrollDirection(e) {
+        if (e.wheelDelta) {
+          return e.wheelDelta > 0;
+        }
+        return e.deltaY < 0;
+      }
+
+      function openmenu(e) {
+        e.preventDefault();
+        if (menu.classList.contains('d-none')) {
+            menu.classList.remove("d-none");
+            menu.style.left = e.pageX + "px";
+            menu.style.top = e.pageY + "px";
+        } else {
+            menu.classList.add("d-none");
+            window.removeEventListener('contextmenu', openmenu);
+        }
+      }
+
+      function closemenu(e) {
+        if (menu.classList.contains('d-none') == false) {
+            menu.classList.add("d-none");
+        } 
+        window.removeEventListener('contextmenu', openmenu);
       }
   
       function reset() {
         el.classList.remove('drag');
         window.removeEventListener('mousemove', mouseMoveHandler);
         window.removeEventListener('mouseup', reset);
+        window.removeEventListener('wheel', scroll);
         el.style.zIndex = "-1";
+
+        let leftPercent = (parseInt(el.style.left)  / containerWidth) * 100;
+        if (leftPercent <= 1) {
+            el.style.left =  leftPercent  + '%';
+        }
 
         let widget = widgets.find(widget => widget.id == el.getAttribute('id'))
         widget.posx =  el.style.left;
         widget.posy =  el.style.top;
+        widget.width = elWidth;
       }
       e.preventDefault();
+      window.addEventListener('wheel', scroll);
       window.addEventListener('mousemove', mouseMoveHandler);
       window.addEventListener('mouseup', reset);
+      el.addEventListener('contextmenu', openmenu);
+      window.addEventListener('click', closemenu);
     });
   }
+    
+
 </script>
 {% endblock %}

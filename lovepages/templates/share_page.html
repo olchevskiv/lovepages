@@ -1,0 +1,31 @@
+{% extends "base.html" %} 
+{% block content %}
+<div class="row">
+  <div class="col-8 col-sm-6 mt-5 mb-3">
+    <h2 >♡ share page ♡</h2>
+  </div>
+  <div class="col-4 col-sm-6 mt-5 mb-3" align="right">
+    <a href="/page/{{page.id}}" class="btn btn-primary mr-1">back</a>
+    <a href="javascript:void(0)" onclick="document.getElementById('sharePage').click();" class="btn btn-primary ">share!</a>
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-lg-7">
+    <form method="POST" class="w-100">
+      <div class="form-group row">
+        <div class="col-lg-5 sr-only ">
+          <label for="user_name" class="form-label">share with</label>
+        </div>
+        <div class="col-lg-7">
+          <input type="text" class="form-control" id="user_name" name="user_name" maxlength="42" placeholder="enter username of person you would like to share with"  />
+        </div>
+      </div> 
+
+      <div class="d-none" align="right">
+        <button type="submit" id="sharePage" class="btn btn-primary">share!</button>
+      </div>
+    </form>
+  </div>
+</div>
+{% endblock %}

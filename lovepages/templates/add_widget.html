@@ -1,30 +1,25 @@
 {% extends "base.html" %} 
-{% block title %}Home{% endblock %} 
 {% block content %}
 <div class="row">
   <div class="col-8 col-sm-6 mt-5 mb-3">
-    <h2 >add widget</h2>
+    <h2 >♡ add new widget ♡</h2>
   </div>
   <div class="col-4 col-sm-6 mt-5 mb-3" align="right">
-    <a href="/" class="btn btn-primary">back</a>
+    <a href="/page/{{page_id}}/edit" class="btn btn-primary">back</a>
+    <a href="javascript:void(0);" onclick="document.getElementById('addWidget').click();" class="btn btn-primary">add!</a>
   </div>
 </div>
 
 <div class="row">
-  <div class="col-xl-12">
+  <div class="col-lg-7">
     <form method="POST" class="w-100">
       <div class="form-group">
         <label for="type" class="sr-only">Type</label>
-        <select class="form-control" id="type" name="type">
+        <select class="form-control" required="true" id="type" name="type">
             <option selected>choose a widget type</option>
             <option value="image">image</option>
             <option value="text">text</option>
         </select>
-      </div>
-
-      <div class="form-group">
-        <label for="width" class="sr-only">Width</label>
-        <input type="number" class="form-control" id="width" name="width" placeholder="enter width of widget" />
       </div>
 
       <div class="form-group d-none" data-form-type="text">
@@ -51,25 +46,29 @@
 
       <div class="form-group d-none" data-form-type="text">
         <label for="font_color" class="sr-only">Font Color</label>
-        <input type="color" class="form-control" id="font_color" value="#fbfef9">
+        <input type="color" class="form-control" id="font_color" name="font_color" value="#fbfef9">
       </div>
 
       <div class="form-group d-none" data-form-type="image">
           <label for="link" class="sr-only">Image Link</label>
-          <input type="url" class="form-control" pattern="https://.*" id="link" name="link" placeholder="enter a link to an image" />
+          <input type="url" class="form-control" pattern="https://.*" maxlength="1000" id="link" name="link" placeholder="enter direct link to an image" />
       </div>
 
+      <div class="form-group">
+        <label for="width" class="sr-only">Width</label>
+        <input type="number"  required="true" class="form-control" id="width" step="10" min="10" max="1000" name="width" placeholder="enter width of widget" />
+      </div>
 
       <div id="widget_preview" class="d-none mt-5">
-        <div>preview</div>
+        <div class="mb-2">preview</div>
         <div id="widget">
             <img src="" id="image_preview" class="w-100">
             <div id="text_preview"></div>
         </div>
       </div>
     
-      <div align="right">
-        <button type="submit" class="btn btn-primary">add!</button>
+      <div class="d-none" align="right">
+        <button type="submit" id="addWidget" class="btn btn-primary">add!</button>
       </div>
     </form>
   </div>
@@ -147,11 +146,14 @@
             let img_preview = document.getElementById("image_preview");
             widget_preview.classList.remove("d-none");
 
+            img_preview.setAttribute("src", img.value);
+
             if (width.value != '') {
               widget.style.width = width.value + 'px';
+            } else {
+              width.value = parseInt(window.getComputedStyle(img_preview).width);
             }
-         
-            img_preview.setAttribute("src", img.value);
+        
         }
     });
 

@@ -1,15 +1,138 @@
 {% extends "base.html" %} 
-{% block title %}Home{% endblock %} 
 {% block content %}
-<div class="row">
-  <div class="col-xl-12 mt-5 mb-3">
-    <h3 >{{ user.display_name }}</h3>
-    <h5 >{{ user.user_name }}</h5>
-    <h6 >{{ user.email }}</h6>
+<div class="row mt-5 mb-3">
+  <div class="col-8 col-sm-6">
+   <h3>hello {{ user.display_name }}</h3>
+  </div>
+  <div class="col-4 col-sm-6" align="right">
+    <a href="javascript:void(0)" id="saveSettings"  class="btn btn-primary mr-1 mb-1">save changes</a>
   </div>
 </div>
 
 <div class="row">
+  <div class="col-xl-6">
+    <form method="POST" class="w-100">
 
+      <div class="form-group" >
+        <div class="col-lg-5">
+          account settings
+        </div>
+      </div>
+      <div class="form-group row">
+        <div class="col-lg-5">
+          <label for="user_name" class="form-label">User Name</label>
+        </div>
+        <div class="col-lg-7">
+          <input type="text" class="form-control" id="user_name" name="user_name" value="{{user.user_name}}" />
+        </div>
+      </div> 
+
+      <div class="form-group row">
+        <div class="col-lg-5">
+          <label for="email" class="form-label">Email</label>
+        </div>
+        <div class="col-lg-7">
+        <input type="text" class="form-control" id="email" name="email" placeholder="enter email" value="{{user.email}}" />
+         </div>
+      </div>
+
+      <div class="form-group row">
+        <div class="col-lg-5">
+        <label for="display_name" class="form-label">Display Name</label>
+        </div>
+        <div class="col-lg-7">
+        <input type="text" class="form-control" id="display_name" name="display_name" placeholder="enter display name" value="{{user.display_name}}" />
+        </div>
+      </div>
+
+      <div class="form-group" >
+        <div class="col-lg-5">
+          site settings
+        </div>
+      </div>
+      <div class="form-group row" >
+        <div class="col-lg-5">
+        <label for="background_color" class="form-label">Background Color</label>
+        </div>
+        <div class="col-lg-7">
+        <input type="color" class="form-control" id="background_color" value="{{user.background_color}}">
+        </div>
+      </div>
+
+      <div class="form-group row" >
+        <div class="col-lg-5">
+        <label for="primary_color" class="form-label" >Primary Color</label>
+        </div>
+        <div class="col-lg-7">
+        <input type="color" class="form-control" id="primary_color" value="{{user.primary_color}}">
+        </div>
+      </div>
+    
+      <div class="form-group row" >
+        <div class="col-lg-5">
+        <label for="secondary_color" class="form-label" >Secondary Color</label>
+        </div>
+        <div class="col-lg-7">
+        <input type="color" class="form-control" id="secondary_color" value="{{user.secondary_color}}">
+        </div>
+      </div>
+    
+      <div class="form-group row" >
+        <div class="col-lg-5">
+        <label for="text_color" class="form-label">Text Color</label>
+        </div>
+        <div class="col-lg-7">
+        <input type="color" class="form-control" id="text_color" value="{{user.text_color}}">
+        </div>
+      </div>
+
+      <div class="form-group row" >
+        <div class="col-lg-5">
+          <label for="text_font" class="form-label">Font</label>
+        </div>
+        <div class="col-lg-7">
+          <select class="form-control" id="text_font" name="font_family">
+            <option selected>choose a font</option>
+            <option value="serif"  {% if user.text_font == 'serif' %}selected{% endif %} style="font-family:serif">serif</option>
+            <option value="sans-serif" {% if user.text_font == 'sans-serif' %}selected{% endif %} style="font-family:sans-serif">sans-serif</option>
+            <option value="monospace" {% if user.text_font == 'monospace' %}selected{% endif %} style="font-family:monospace">monospace</option>
+            <option value="cursive" {% if user.text_font == 'cursive' %}selected{% endif %} style="font-family:cursive">cursive</option>
+            <option value="fantasy" {% if user.text_font == 'fantasy' %}selected{% endif %} style="font-family:fantasy">fantasy</option>
+        </select>
+        </div>
+      </div>
+
+
+    </form>
+  </div>
 </div>
+  {% endblock %}
+  {% block scripts %}
+  <script>
+    const saveButton = document.getElementById('saveSettings');
+    saveButton.addEventListener('click', function(e) {
+      fetch(site_url + 'settings', {
+          method: 'post',
+          body: JSON.stringify({
+            'background_color':document.getElementById('background_color').value.trim(),
+            'primary_color':document.getElementById('primary_color').value.trim(),
+            'secondary_color':document.getElementById('secondary_color').value.trim(),
+            'text_color':document.getElementById('text_color').value.trim(),
+            'text_font':document.getElementById('text_font').value,
+          }),
+          headers: {
+              'Accept': 'application/json',
+              'Content-Type': 'application/json'
+          }
+      }).then((response) => {
+          document.documentElement.style.setProperty('--bg', document.getElementById('background_color').value);
+          document.documentElement.style.setProperty('--primary', document.getElementById('primary_color').value);
+          document.documentElement.style.setProperty('--secondary', document.getElementById('secondary_color').value);
+          document.documentElement.style.setProperty('--text', document.getElementById('text_color').value); 
+          document.documentElement.style.setProperty('--font-family', document.getElementById('text_font').value);
+      }).catch((error) => {
+          console.log(error)
+      });
+    });
+  </script>
   {% endblock %}

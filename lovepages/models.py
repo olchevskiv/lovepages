@@ -15,11 +15,13 @@ class Page(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String(40))
     sub_title = db.Column(db.String(40))
+    icon_link = db.Column(db.Text)
     widgets = db.relationship("Widget", primaryjoin="Page.id == Widget.page_id")
     create_date = db.Column(db.DateTime(timezone=True), default=func.now())
     create_user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
     update_date = db.Column(db.DateTime(timezone=True))
     update_user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+    created_by = db.relationship('User', primaryjoin='User.id==Page.create_user_id')
 
     def as_dict(self):
         return {c.name: str(getattr(self, c.name)) for c in self.__table__.columns}
@@ -88,12 +90,19 @@ class User(db.Model, UserMixin):
     password = db.Column(db.String(255), nullable=False)
     user_name = db.Column(db.String(42), unique=True, nullable=False)
     display_name = db.Column(db.String(128))
-    birthdate = db.Column(db.Date())
+
+    background_color = db.Column(db.String(50))
+    primary_color = db.Column(db.String(50))
+    secondary_color = db.Column(db.String(50))
+    text_color = db.Column(db.String(50))
+    text_font = db.Column(db.String(50))
+
     last_login = db.Column(db.DateTime(timezone=True))
     create_date = db.Column(db.DateTime(timezone=True), default=func.now())
     create_user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
     update_date = db.Column(db.DateTime(timezone=True))
     update_user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+
     notes = db.relationship('Note', primaryjoin='User.id==Note.create_user_id')
     pages = db.relationship("Page", secondary="user_page",
                         primaryjoin="User.id == User_Page.user_id", secondaryjoin="Page.id == User_Page.page_id")

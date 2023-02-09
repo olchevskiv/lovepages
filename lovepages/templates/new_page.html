@@ -1,28 +1,47 @@
 {% extends "base.html" %} 
-{% block title %}Home{% endblock %} 
 {% block content %}
 <div class="row">
   <div class="col-8 col-sm-6 mt-5 mb-3">
     <h2 >♡ create new page ♡</h2>
   </div>
   <div class="col-4 col-sm-6 mt-5 mb-3" align="right">
-    <a href="/" class="btn btn-primary">back</a>
+    <a href="/" class="btn btn-primary mr-1">back</a>
+    <a href="javascript:void(0)" onclick="document.getElementById('createPage').click();" class="btn btn-primary ">create!</a>
   </div>
 </div>
 
 <div class="row">
-  <div class="col-xl-12">
+  <div class="col-lg-7">
     <form method="POST" class="w-100">
-      <div class="form-group">
-        <label for="title" class="sr-only">Title</label>
-        <input type="text" class="form-control" id="title" placeholder="enter page title (e.g. Beach Trip)" name="title"/>
-      </div>
-      <div class="form-group">
-        <label for="sub_title" class="sr-only">Sub Title</label>
-        <input type="text" class="form-control" id="sub_title" placeholder="enter page sub-title (e.g. June-July 2022)" name="sub_title"/>
-      </div>
-      <div align="right">
-        <button type="submit" class="btn btn-primary">create!</button>
+      <div class="form-group row">
+        <div class="col-lg-5">
+          <label for="title" class="form-label">Title</label>
+        </div>
+        <div class="col-lg-7">
+          <input type="text" class="form-control" id="title" name="title" placeholder="enter page title"  />
+        </div>
+      </div> 
+
+      <div class="form-group row">
+        <div class="col-lg-5">
+          <label for="sub_title" class="form-label">Sub-Title</label>
+        </div>
+        <div class="col-lg-7">
+          <input type="text" class="form-control" id="sub_title" name="sub_title"  placeholder="enter page sub-title"/>
+        </div>
+      </div> 
+
+      <div class="form-group row">
+        <div class="col-lg-5">
+          <label for="sub_title" class="form-label">Icon</label>
+        </div>
+        <div class="col-lg-7">
+          <input type="url" class="form-control" pattern="https://.*" id="icon_link" name="icon_link" placeholder="enter a link to an image for a page icon" />
+        </div>
+      </div> 
+
+      <div class="d-none" align="right">
+        <button type="submit" id="createPage" class="btn btn-primary">create!</button>
       </div>
     </form>
   </div>

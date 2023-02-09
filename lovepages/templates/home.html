@@ -1,5 +1,4 @@
 {% extends "base.html" %} 
-{% block title %}Home{% endblock %} 
 {% block content %}
 <div class="row">
   <div class="col-8 col-sm-6 mt-5 mb-3">
@@ -13,10 +12,18 @@
 <div class="row">
   {% for page in user.pages %}
   <div class="col-md-6 col-xl-3">
-    <a href="/page/{{ page.id }}" class="card text-muted">
-      <div class="card-body">
-        <div class="card-title">{{ page.title }}</div>
-        <div class="card-text">{{ page.sub_title }}</div>
+    <a href="/page/{{ page.id }}" class="card card-page text-muted">
+      <div class="card-body d-flex">
+        {% if page.icon_link %}
+        <img src="{{page.icon_link}}" class="page-icon me-4 align-self-center">
+        {% endif %}
+        <div class="card-title">
+          <h6>{{ page.title }}</h6>
+          <div class="card-text">{{ page.sub_title }}</div>
+          <div class="card-text align-self-end">by {{ page.created_by.display_name }}</div>
+        </div>
+       
+      
       </div>
     </a>
   </div>

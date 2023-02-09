@@ -49,7 +49,6 @@ def signup():
         email = request.form.get('email')
         user_name = request.form.get('user_name')
         display_name =  request.form.get('display_name')
-        birth_date = request.form.get('birth_date')
         password = request.form.get('password')
         confirm_password = request.form.get('confirm_password')
 
@@ -68,7 +67,7 @@ def signup():
             if check_user:
                 flash('Non unique email or username', category="error")
             else:
-                new_user = User(email=email, user_name=user_name, display_name=display_name, birthdate= datetime.strptime(birth_date, "%Y-%m-%d"), password=generate_password_hash(password, method='sha256'))
+                new_user = User(email=email, user_name=user_name, display_name=display_name, password=generate_password_hash(password, method='sha256'))
                 db.session.add(new_user)
                 db.session.commit()
                 db.session.add(new_user)
